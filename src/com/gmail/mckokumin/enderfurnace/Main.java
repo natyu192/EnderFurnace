@@ -76,11 +76,11 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor{
 	@EventHandler
 	public void furnaceListener(PlayerInteractEvent event){
 		Player p = event.getPlayer();
-		Location clicked = event.getClickedBlock().getLocation();
 		if (event.getAction() != Action.RIGHT_CLICK_BLOCK
-				|| clicked == null){
+				|| event.getClickedBlock().getLocation() == null){
 			return;
 		}
+		Location clicked = event.getClickedBlock().getLocation();
 		if (p.getItemInHand() != null){
 			if (isFurnaceSetter(p.getItemInHand())){
 				setFurnaceLocation(clicked);
@@ -93,8 +93,8 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor{
 					&& clicked.getBlockY() == getFurnaceLocation().getBlockY()
 					&& clicked.getBlockZ() == getFurnaceLocation().getBlockZ()
 					&& clicked.getWorld().getName() == getFurnaceLocation().getWorld().getName()){
-				p.openInventory(furnaces.get(p.getName()));
 				event.setCancelled(true);
+				p.openInventory(furnaces.get(p.getName()));
 			}
 		}
 	}
