@@ -1,0 +1,6 @@
+name: EnderFurnace
+main: com.gmail.mckokumin.enderfurnace.Main
+version: 0.0.1
+commands:
+  enderfurnace:
+    permission: natyu.enderfurnace
