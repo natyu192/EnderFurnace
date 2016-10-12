@@ -3,5 +3,10 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER/org.eclipse.jdt.internal.debug.ui.launcher.StandardVMType/JavaSE-1.8"/>
 	<classpathentry kind="lib" path="D:/さーば/ソース/spigot-1.9.2.jar"/>
+	<classpathentry kind="lib" path="D:/さーば/ソース/spigot-1.8.8-R0.1-SNAPSHOT-latest.jar"/>
+	<classpathentry kind="lib" path="D:/さーば/ソース/BuildTools/1.8/Spigot/Spigot-Server/target/spigot-1.8-R0.1-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="D:/さーば/ソース/BuildTools/1.10/Spigot/Spigot-Server/target/spigot-1.10.2-R0.1-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="D:/さーば/ソース/BuildTools/1.8.3/Spigot/Spigot-Server/target/spigot-1.8.3-R0.1-SNAPSHOT.jar"/>
+	<classpathentry kind="lib" path="D:/さーば/ソース/BuildTools/1.9.4/Spigot/Spigot-Server/target/spigot-1.9.4-R0.1-SNAPSHOT.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

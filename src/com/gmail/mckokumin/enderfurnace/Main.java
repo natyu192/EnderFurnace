@@ -2,24 +2,17 @@ package com.gmail.mckokumin.enderfurnace;
 
 import java.util.HashMap;
 
-import net.minecraft.server.v1_9_R1.TileEntityFurnace;
-
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Server;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_9_R1.CraftWorld;
-import org.bukkit.craftbukkit.v1_9_R1.inventory.CraftInventoryFurnace;
 import org.bukkit.entity.Player;
-import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.Action;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.FurnaceInventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -47,67 +40,12 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor{
 		saveDefaultConfig();
 		saveConfig();
 		getServer().getPluginManager().registerEvents(this, this);
+		load();
 	}
 
 	@Override
 	public void onDisable(){
 
-	}
-
-	@EventHandler
-	public void onTick(TickUpdateEvent event){
-		for (Player p : Bukkit.getOnlinePlayers()){
-			if (!furnaces.containsKey(p.getName())
-					&& getFurnaceLocation() != null){
-				int x = 10000000;
-				int y = 255;
-				int z = 10000000;
-				TileEntityFurnace furnace;
-				getFurnaceLocation().getBlock().getWorld().getBlockAt(x, y, z).setType(Material.FURNACE);
-				furnace = ((TileEntityFurnace) ((CraftWorld) getFurnaceLocation().getBlock().getWorld())
-						.getTileEntityAt(x, y, z));
-				furnaces.put(p.getName(), new CraftInventoryFurnace(furnace));
-				getFurnaceLocation().getBlock().getWorld().getBlockAt(x, y, z).setType(Material.AIR);
-			}
-		}
-	}
-
-	@SuppressWarnings("deprecation")
-	@EventHandler
-	public void furnaceListener(PlayerInteractEvent event){
-		Player p = event.getPlayer();
-		if (event.getAction() != Action.RIGHT_CLICK_BLOCK
-				|| event.getClickedBlock().getLocation() == null){
-			return;
-		}
-		Location clicked = event.getClickedBlock().getLocation();
-		if (p.getItemInHand() != null){
-			if (isFurnaceSetter(p.getItemInHand())){
-				setFurnaceLocation(clicked);
-				p.sendMessage("§eエンダーかまどの位置を設定しました");
-				return;
-			}
-		}
-		if (getFurnaceLocation() != null){
-			if (clicked.getBlockX() == getFurnaceLocation().getBlockX()
-					&& clicked.getBlockY() == getFurnaceLocation().getBlockY()
-					&& clicked.getBlockZ() == getFurnaceLocation().getBlockZ()
-					&& clicked.getWorld().getName() == getFurnaceLocation().getWorld().getName()){
-				event.setCancelled(true);
-				p.openInventory(furnaces.get(p.getName()));
-			}
-		}
-	}
-
-	@EventHandler
-	public void breakCanceller(BlockBreakEvent event){
-		Location broke = event.getBlock().getLocation();
-		if (broke.getBlockX() == getFurnaceLocation().getBlockX()
-				&& broke.getBlockY() == getFurnaceLocation().getBlockY()
-				&& broke.getBlockZ() == getFurnaceLocation().getBlockZ()
-				&& broke.getWorld().getName() == getFurnaceLocation().getWorld().getName()){
-			event.setCancelled(true);
-		}
 	}
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args){
@@ -125,20 +63,20 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor{
 		return true;
 	}
 
-	public boolean isFurnaceSetter(ItemStack item){
-		if (item.getType() == Material.STICK
-				&& item.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.YELLOW + "FurnaceSetter")){
-			return true;
-		}
-		return false;
-	}
-
 	public ItemStack furnaceSetter(){
 		ItemStack item = new ItemStack(Material.STICK);
 		ItemMeta im = item.getItemMeta();
 		im.setDisplayName(org.bukkit.ChatColor.YELLOW + "FurnaceSetter");
 		item.setItemMeta(im);
 		return item;
+	}
+
+	public boolean isFurnaceSetter(ItemStack item){
+		if (item.getType() == Material.STICK
+				&& item.getItemMeta().getDisplayName().equalsIgnoreCase(ChatColor.YELLOW + "FurnaceSetter")){
+			return true;
+		}
+		return false;
 	}
 
 	public void setFurnaceLocation(Location loc){
@@ -159,6 +97,34 @@ public class Main extends JavaPlugin implements Listener, CommandExecutor{
 			return furnace;
 		} catch (NullPointerException e){
 			return null;
+		}
+	}
+
+	private void load() {
+		Server s = Bukkit.getServer();
+		String pg = s.getClass().getPackage().getName();
+		pg = pg.substring(pg.lastIndexOf('.') + 1);
+		switch(pg){
+		case "v1_8_R1":
+			getServer().getPluginManager().registerEvents(new v1_8_R1(this), this);
+			break;
+		case "v1_8_R2":
+			getServer().getPluginManager().registerEvents(new v1_8_R2(this), this);
+			break;
+		case "v1_8_R3":
+			getServer().getPluginManager().registerEvents(new v1_8_R3(this), this);
+			break;
+		case "v1_9_R1":
+			getServer().getPluginManager().registerEvents(new v1_9_R1(this), this);
+			break;
+		case "v1_9_R2":
+			getServer().getPluginManager().registerEvents(new v1_9_R2(this), this);
+			break;
+		case "v1_10_R1":
+			getServer().getPluginManager().registerEvents(new v1_10_R1(this), this);
+			break;
+		default:
+			break;
 		}
 	}
 
